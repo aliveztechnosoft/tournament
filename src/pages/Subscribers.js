@@ -53,7 +53,7 @@ const Page = () => {
           search: searchTerm,
           order: "ASC",
           order_by: "id",
-          row_count: 10,
+          row_count: 100,
           page: 1,
           token: token,
         },
@@ -90,14 +90,20 @@ const Page = () => {
         }}
       >
         <Container maxWidth="xl">
-          <Stack spacing={3} marginTop="20px">
+          <Stack spacing={3} marginTop="20px" marginBottom="50px">
+          <Stack direction="row" justifyContent="space-between" spacing={4}>
+              <Stack spacing={1}>
+                <Typography variant="h6">Subscribers</Typography>
+                
+              </Stack>
+            </Stack>
             <Stack direction="row" justifyContent="space-between" spacing={4}>
               <Stack spacing={1}>
-                <Typography variant="h4">Subscribers</Typography>
                 <Stack alignItems="center" direction="row" spacing={1}>
                   <Button
                     onClick={handleExport}
                     color="inherit"
+                    variant="outlined"
                     startIcon={
                       <SvgIcon fontSize="small">
                         <BsArrowDownSquareFill />
@@ -109,7 +115,7 @@ const Page = () => {
                 </Stack>
               </Stack>
             </Stack>
-            <Card sx={{ p: 2 }}>
+            <Card sx={{ p: 2 ,borderRadius:"10px"}}>
               <OutlinedInput
                 fullWidth
                 placeholder="Search Users"
@@ -126,6 +132,7 @@ const Page = () => {
               />
             </Card>
             <SubscriberTable
+              
               count={subscribers.length}
               items={SubscriberItems}
               onPageChange={handlePageChange}

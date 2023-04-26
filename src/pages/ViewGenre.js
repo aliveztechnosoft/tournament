@@ -1,8 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Head from "next/head";
 import { RxMagnifyingGlass } from "react-icons/rx";
-import { Card, InputAdornment, OutlinedInput } from "@mui/material";
-import { BsArrowDownSquareFill } from "react-icons/bs";
+import {
+  Card,
+  InputAdornment,
+  OutlinedInput,
+  CircularProgress,
+} from "@mui/material";
+import { BsArrowDownSquareFill, BsFillPlusSquareFill } from "react-icons/bs";
 import {
   Box,
   Button,
@@ -10,7 +15,14 @@ import {
   Stack,
   SvgIcon,
   Typography,
+  Unstable_Grid2 as Grid,
 } from "@mui/material";
+import TextField from "@mui/material/TextField";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 import json2csv from "json2csv";
 import { applyPagination } from "src/utils/apply-pagination";
 import { GenreTable } from "@/components/GenreTable";
@@ -18,6 +30,9 @@ import { API_BASE_URL } from "@/utils/Api";
 import axios from "axios";
 import { Layout as DashboardLayout } from "../components/Navbar/layout";
 import { getGenre } from "@/utils/genre";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const now = new Date();
 
 const usePagination = (data, page, rowsPerPage) => {
@@ -29,11 +44,69 @@ const Page = ({ getGenre }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [genre, setGenre] = useState([]);
+  const [category, setCategory] = useState("");
+  const [image, setImage] = useState("");
+  const [imageName, setImageName] = useState("");
   const [searchTerm, setSearchTerm] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const GenreItems = usePagination(genre, page, rowsPerPage);
+  const [loading, setLoading] = useState(false);
+  const [isApiCallInProgress, setIsApiCallInProgress] = useState(false);
+
   const token = typeof window !== "undefined" && localStorage.getItem("token");
-  useEffect(() => {
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleSubmit = async (event) => {
+    const token =
+      typeof window !== "undefined" && localStorage.getItem("token");
+    event.preventDefault();
+
+    const f = new FormData();
+    f.append("action", "add_new_category");
+    f.append("name", category);
+    f.append("image", image);
+
+    setLoading(true); // Set isLoading to true when submitting the form
+    if (category) {
+      axios({
+        method: "post",
+        url: `${API_BASE_URL}/categories?token=${token}`,
+        data: f,
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+        .then(function (response) {
+          if (isApiCallInProgress) {
+            return; // Don't do anything if API call is already in progress
+          }
+          if (response.data.status === 1) {
+            setIsApiCallInProgress(true);
+            toast.success(response.data.msg);
+            handleClose();
+          } else {
+            toast.error(response.data.msg);
+          }
+        })
+        .catch(function (error) {})
+        .finally(function () {
+          setLoading(false);
+          fetchMain();
+          setCategory(null);
+          setIsApiCallInProgress(false); // Set isLoading to false when the response comes
+        });
+    } else {
+      setLoading(false);
+      toast.error("Enter Name");
+    }
+  };
+  const fetchMain = async () => {
     const randomString = Math.random().toString(36).substring(7);
     setIsLoading(true);
     axios
@@ -42,7 +115,7 @@ const Page = ({ getGenre }) => {
           search: searchTerm,
           order: "ASC",
           order_by: "id",
-          row_count: 10,
+          row_count: 100,
           page: 1,
           token: token,
         },
@@ -57,7 +130,14 @@ const Page = ({ getGenre }) => {
       .finally(() => {
         setIsLoading(false); // set loading state back to false
       });
+  }
+
+  useEffect(() => {
+    fetchMain()
   }, [token, searchTerm]);
+
+
+
   const handlePageChange = useCallback((event, value) => {
     setPage(value);
   }, []);
@@ -76,6 +156,19 @@ const Page = ({ getGenre }) => {
     a.click();
   }, [genre]);
 
+  const handleImageChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setImageName(e.target.files[0].name);
+      let reader = new FileReader();
+      reader.onload = (e) => {
+        setImage(e.target.result);
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    }
+  };
+
+  
+
   return (
     <>
       <Head>
@@ -88,14 +181,19 @@ const Page = ({ getGenre }) => {
         }}
       >
         <Container maxWidth="xl">
-          <Stack spacing={3} marginTop="20px">
+          <Stack spacing={3} marginTop="20px" marginBottom="50px">
             <Stack direction="row" justifyContent="space-between" spacing={4}>
               <Stack spacing={1}>
-                <Typography variant="h4">View Genre</Typography>
+                <Typography variant="h6">View Genre</Typography>
+              </Stack>
+            </Stack>
+            <Stack direction="row" justifyContent="space-between" spacing={4}>
+              <Stack spacing={1}>
                 <Stack alignItems="center" direction="row" spacing={1}>
                   <Button
                     onClick={handleExport}
                     color="inherit"
+                    variant="outlined"
                     startIcon={
                       <SvgIcon fontSize="small">
                         <BsArrowDownSquareFill />
@@ -106,8 +204,24 @@ const Page = ({ getGenre }) => {
                   </Button>
                 </Stack>
               </Stack>
+              <Stack spacing={1}>
+                <Stack alignItems="center" direction="row" spacing={1}>
+                  <Button
+                    onClick={handleClickOpen}
+                    color="primary"
+                    variant="outlined"
+                    startIcon={
+                      <SvgIcon fontSize="small">
+                        <BsFillPlusSquareFill />
+                      </SvgIcon>
+                    }
+                  >
+                    Add New
+                  </Button>
+                </Stack>
+              </Stack>
             </Stack>
-            <Card sx={{ p: 2 }}>
+            <Card sx={{ p: 2,borderRadius:"10px" }}>
               <OutlinedInput
                 fullWidth
                 placeholder="Search Genre"
@@ -136,6 +250,59 @@ const Page = ({ getGenre }) => {
           </Stack>
         </Container>
       </Box>
+
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Add Genre</DialogTitle>
+        <DialogContent>
+          <Box sx={{ m: -1.5 }}>
+            <Grid container spacing={3}>
+              <Grid xs={12} md={12}>
+                <TextField
+                  fullWidth
+                  label="Enter Name"
+                  name="title"
+                  onChange={(event) => setCategory(event.target.value)}
+                  required
+                  value={category}
+                />
+              </Grid>
+              <Grid xs={12} md={12}>
+                <label htmlFor="btn-upload">
+                  <input
+                    id="btn-upload"
+                    name="btn-upload"
+                    style={{ display: "none" }}
+                    type="file"
+                    onChange={handleImageChange}
+                  />
+                  <Button
+                    className="btn-choose"
+                    variant="outlined"
+                    component="span"
+                    sx={{ mr: 1 }}
+                  >
+                    Choose Files
+                  </Button>
+                  {imageName.length > 10
+                    ? "..." +
+                      imageName.slice(imageName.length - 10, imageName.length)
+                    : imageName}
+                </label>
+              </Grid>
+            </Grid>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button variant="contained" onClick={handleSubmit}>
+            {loading && (
+              <CircularProgress size={20} color="inherit" sx={{ mr: 1 }} />
+            )}
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <ToastContainer />
     </>
   );
 };

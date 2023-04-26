@@ -38,7 +38,7 @@ export const LogsTable = (props) => {
   const selectedAll = items.length > 0 && selected.length === items.length;
 
   return (
-    <Card>
+    <Card sx={{borderRadius:"10px"}}>
       <Scrollbar>
         <Box sx={{ minWidth: 800 }}>
           <Table>
@@ -61,11 +61,12 @@ export const LogsTable = (props) => {
               )}
               {items.map((user, index) => {
                 const isSelected = selected.includes(user.id);
+                const currentIndex = page * rowsPerPage + index + 1;
 
                 return (
                   <TableRow hover key={user.id} selected={isSelected}>
                     <TableCell>
-                      <Typography variant="subtitle2">{index + 1}</Typography>
+                      <Typography variant="subtitle2">{currentIndex}</Typography>
                     </TableCell>
                     <TableCell>{user.game_name}</TableCell>
                     <TableCell>{user.android}</TableCell>

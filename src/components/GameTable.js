@@ -68,7 +68,7 @@ export const GameTable = (props) => {
     setEditRow(gameToEdit);
   };
   return (
-    <Card>
+    <Card sx={{borderRadius:"10px"}}> 
       <Scrollbar>
         <Box sx={{ minWidth: 800 }}>
           <Table>
@@ -95,13 +95,14 @@ export const GameTable = (props) => {
               {items &&
                 items.map((game, index) => {
                   const isSelected = selected.includes(game.id);
+                  const currentIndex = page * rowsPerPage + index + 1;
 
                   return (
                     <TableRow hover key={game.id} selected={isSelected}>
                       <TableCell>
                         <Stack alignItems="center" direction="row" spacing={2}>
                           <Typography variant="subtitle2">
-                            {index + 1}
+                            {currentIndex}
                           </Typography>
                         </Stack>
                       </TableCell>

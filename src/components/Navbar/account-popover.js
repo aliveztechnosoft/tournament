@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { useAuthContext } from "../../contexts/auth-context";
 import {
   Box,
   Divider,
@@ -12,12 +13,14 @@ import {
 export const AccountPopover = (props) => {
   const { anchorEl, onClose, open } = props;
   const router = useRouter();
+  const {signOut} = useAuthContext();
 
   const handleSignOut = useCallback(() => {
     onClose?.();
     localStorage.removeItem("token");
+    signOut();
     router.push("/auth/login");
-  }, [onClose, router]);
+  }, [onClose, router,signOut]);
 
   return (
     <Popover

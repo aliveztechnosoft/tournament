@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import Head from "next/head";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
@@ -8,6 +8,7 @@ import { Box, Button, Stack, Card,TextField, Typography } from "@mui/material";
 import CircularProgress from '@mui/material/CircularProgress';
 import axios from "axios";
 import Image from "next/image";
+import { API_BASE_URL } from "../../utils/Api.js";
 import { useAuthContext } from "src/contexts/auth-context";
 
 const Page = () => {
@@ -15,8 +16,12 @@ const Page = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const {signIn} = useAuthContext();
-  
+  const { signIn } = useAuthContext();;
+  useEffect(() => {
+    if(window.sessionStorage.getItem("authenticated") === "true"){
+      router.push("/");
+    }
+  }, []);
   const handleLogin = async () => {
     event.preventDefault();
     setLoading(true);
@@ -27,7 +32,7 @@ const Page = () => {
 
     axios({
       method: "post",
-      url: "https://aliveztechnosoft.com/python-automations/ViyuGaming/admins",
+      url: API_BASE_URL+"/admins",
       data: f,
       headers: { "Content-Type": "multipart/form-data" },
     })
@@ -38,9 +43,10 @@ const Page = () => {
         if(response.data.status === 1) {
           const token = response.data.token;
           localStorage.setItem("token", token);
+          signIn(token);
           toast.success(response.data.msg);
           signIn(email,password);
-        // router.push("/");
+         router.push("/");
 
         }else{
          

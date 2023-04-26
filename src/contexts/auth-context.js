@@ -84,7 +84,7 @@ export const AuthProvider = (props) => {
         name: "Anika Visser",
         email: "anika.visser@devias.io",
       };
-      console.log("ds");
+
       dispatch({
         type: HANDLERS.INITIALIZE,
         payload: user,
@@ -124,9 +124,9 @@ export const AuthProvider = (props) => {
     });
   };
 
-  const signIn = async (email, password) => {
-    console.log(email);
-
+  const signIn = async (token) => {
+    
+    
     try {
       window.sessionStorage.setItem("authenticated", "true");
     } catch (err) {
@@ -151,6 +151,8 @@ export const AuthProvider = (props) => {
   };
 
   const signOut = () => {
+    window.sessionStorage.setItem("authenticated", "false");
+    const user = {};
     dispatch({
       type: HANDLERS.SIGN_OUT,
     });

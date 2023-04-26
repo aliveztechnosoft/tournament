@@ -33,7 +33,7 @@ export const AgeTable = (props) => {
   const selectedAll = items.length > 0 && selected.length === items.length;
 
   return (
-    <Card>
+    <Card sx={{borderRadius:"10px"}}>
       <Scrollbar>
         <Box sx={{ minWidth: 800 }}>
           <Table>

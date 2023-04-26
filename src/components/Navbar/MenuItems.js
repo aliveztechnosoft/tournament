@@ -33,10 +33,7 @@ export const MenuItems = [
     ),
 
     children: [
-      {
-        label: "Add Genre",
-        link: "/AddGenre",
-      },
+      
       {
         label: "View Genre",
 
@@ -62,11 +59,6 @@ export const MenuItems = [
         label: "View Games",
 
         link: "/ViewGame",
-      },
-      {
-        label: "Add Sub Domains",
-
-        link: "/AddDomain",
       },
       {
         label: "View Domain",

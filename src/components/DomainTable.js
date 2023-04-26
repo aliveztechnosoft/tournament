@@ -53,7 +53,7 @@ export const DomainTable = (props) => {
       });
   };
   return (
-    <Card>
+    <Card sx={{borderRadius:"10px"}}>
       <Scrollbar>
         <Box sx={{ minWidth: 800 }}>
           <Table>
@@ -74,11 +74,11 @@ export const DomainTable = (props) => {
               )}
               {items.map((user, index) => {
                 const isSelected = selected.includes(user.id);
-
+                const currentIndex = page * rowsPerPage + index + 1;
                 return (
                   <TableRow hover key={user.id} selected={isSelected}>
                     <TableCell>
-                      <Typography variant="subtitle2">{index + 1}</Typography>
+                      <Typography variant="subtitle2">{currentIndex}</Typography>
                     </TableCell>
                     <TableCell>
                       <IconButton

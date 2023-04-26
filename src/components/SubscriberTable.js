@@ -17,6 +17,7 @@ import {
   Typography,
 } from "@mui/material";
 import Switch from "@mui/material/Switch";
+import Chip from "@mui/material/Chip";
 
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { useRouter } from "next/router";
@@ -45,6 +46,7 @@ export const SubscriberTable = (props) => {
     rowsPerPage = 0,
     selected = [],
   } = props;
+  const startIndex = (page - 1) * rowsPerPage + 1;
 
   const [users, setUsers] = useState([]);
   useEffect(() => {
@@ -81,8 +83,9 @@ export const SubscriberTable = (props) => {
         console.log(response);
       });
   };
+  const colors=["primary","secondary","info"]
   return (
-    <Card>
+    <Card sx={{borderRadius:"10px"}}> 
       <Scrollbar>
         <Box sx={{ minWidth: 800 }}>
           <Table>
@@ -118,11 +121,14 @@ export const SubscriberTable = (props) => {
               )}
               {users.map((user, index) => {
                 const isSelected = selected.includes(user.id);
-
-                return (
+                const platformsArray = JSON.parse(
+                  user.platforms.replace(/\\/g, "")
+                );
+                const currentIndex = page * rowsPerPage + index + 1;
+                 return (
                   <TableRow hover key={user.id} selected={isSelected}>
                     <TableCell>
-                      <Typography variant="subtitle2">{index + 1}</Typography>
+                      <Typography variant="subtitle2">{(currentIndex )}</Typography>
                     </TableCell>
                     <TableCell>
                       <Stack
@@ -135,7 +141,7 @@ export const SubscriberTable = (props) => {
                           value="start"
                           control={
                             <Switch
-                              checked={user.blocked === 0}
+                            defaultChecked={user.blocked === '0'?false:true}
                               onChange={(event) =>
                                 handleBlock(event, user, user.id, token)
                               }
@@ -164,9 +170,27 @@ export const SubscriberTable = (props) => {
                         </Button>
                       </Stack>
                     </TableCell>
-                    <TableCell>{user.platforms.map((platform, indexp) => {
-                      <p key={indexp}>{platform}</p>
-                    })}</TableCell>
+                    <TableCell>
+                      {" "}
+                      {platformsArray &&
+                        platformsArray.map((platform, index) => (
+                          
+                          <>
+                            {platform ? (
+                              <Chip
+                                key={platform + index}
+                                sx={{ mb: 1 }}
+                                size="small"
+                                label={platform}
+                                variant="outlined"
+                                color={colors[index]}
+                              />
+                            ) : (
+                              ""
+                            )}
+                          </>
+                        ))}
+                    </TableCell>
                     <TableCell>{user.fullname}</TableCell>
                     <TableCell>{user.email}</TableCell>
                     <TableCell>

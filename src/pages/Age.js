@@ -71,7 +71,7 @@ const Page = () => {
         }}
       >
         <Container maxWidth="xl">
-          <Stack spacing={3} marginTop="20px">
+          <Stack spacing={3} marginTop="20px" marginBottom="50px">
             <Stack direction="row" justifyContent="space-between" spacing={4}>
               <Stack spacing={1}>
                 <Typography variant="h4">Age</Typography>

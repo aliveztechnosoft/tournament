@@ -53,7 +53,7 @@ export const MappingTable = (props) => {
       });
   };
   return (
-    <Card>
+    <Card sx={{borderRadius:"10px"}}>
       <Scrollbar>
         <Box sx={{ minWidth: 800 }}>
           <Table>
@@ -74,12 +74,13 @@ export const MappingTable = (props) => {
               )}
               {items.map((user) => {
                 const isSelected = selected.includes(user.id);
+                const currentIndex = page * rowsPerPage + index + 1;
 
                 return (
                   <TableRow hover key={user.id} selected={isSelected}>
                     <TableCell>
                       <Stack alignItems="center" direction="row" spacing={2}>
-                        <Typography variant="subtitle2">{user.id}</Typography>
+                        <Typography variant="subtitle2">{currentIndex}</Typography>
                       </Stack>
                     </TableCell>
                     <TableCell>

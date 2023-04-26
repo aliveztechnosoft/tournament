@@ -52,14 +52,14 @@ const Page = () => {
         }}
       >
         <Container maxWidth="lg">
-          <Stack spacing={3} marginTop="20px">
+          <Stack spacing={3} marginTop="20px" marginBottom="50px">
             <div>
-              <Typography variant="h4">Send Notifications</Typography>
+              <Typography variant="h6">Send Notifications</Typography>
             </div>
             <div>
               <Grid container spacing={3}>
-                <Grid xs={12} md={6} lg={8}>
-                  <Card>
+                <Grid xs={12} md={12} lg={12}>
+                  <Card sx={{borderRadius:"10px"}}>
                     <CardContent>
                       <Box
                         sx={{

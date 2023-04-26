@@ -61,7 +61,9 @@ export const GenreTable = (props) => {
     axios
       .delete(`${API_BASE_URL}/categories/${id}?token=${token}`, {})
       .then((response) => {
+        console.log(items);
         const updatedItems = items.filter((user) => user.id !== id);
+       
         props.setItems(updatedItems);
         console.log(response.data);
         toast.success(response.data.msg);
@@ -74,7 +76,7 @@ export const GenreTable = (props) => {
     handleOpen();
   };
   return (
-    <Card>
+    <Card sx={{borderRadius:"10px"}}>
       <Scrollbar>
         <Box sx={{ minWidth: 800 }}>
           <Table>
@@ -95,11 +97,12 @@ export const GenreTable = (props) => {
               )}
               {items.map((user, index) => {
                 const isSelected = selected.includes(user.id);
+                const currentIndex = page * rowsPerPage + index + 1;
 
                 return (
                   <TableRow hover key={user.id} selected={isSelected}>
                     <TableCell>
-                      <Typography variant="subtitle2">{index + 1}</Typography>
+                      <Typography variant="subtitle2">{currentIndex}</Typography>
                     </TableCell>
                     <TableCell>
                       <IconButton

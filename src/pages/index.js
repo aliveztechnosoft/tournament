@@ -51,7 +51,7 @@ const Page = () => {
               <TotalUser
                 difference={12}
                 positive
-                sx={{ height: "80%", marginBottom: "10px" }}
+                sx={{ height: "80%", marginBottom: "10px",borderRadius:"10px" }}
                 value={data.total_subscribers}
               />
             </Grid>
@@ -59,20 +59,20 @@ const Page = () => {
               <TodayUser
                 difference={16}
                 positive={false}
-                sx={{ height: "80%" }}
+                sx={{ height: "80%",borderRadius:"10px" }}
                 value={data.new_subscribers}
               />
             </Grid>
             <Grid xs={12} sm={6} lg={3}>
-              <NewGames sx={{ height: "80%" }} value={data.new_games} />
+              <NewGames sx={{ height: "80%",borderRadius:"10px" }} value={data.new_games} />
             </Grid>
             <Grid xs={12} sm={6} lg={3}>
-              <TotalGames sx={{ height: "80%" }} value={data.total_games} />
+              <TotalGames sx={{ height: "80%",borderRadius:"10px" }} value={data.total_games} />
             </Grid>
 
             <Grid xs={12} md={12} lg={12}>
               {dataLoaded && (
-                <Top10Table orders={data.top_games} sx={{ height: "100%" }} />
+                <Top10Table orders={data.top_games} sx={{ height: "100%" ,borderRadius:"10px"}} />
               )}
             </Grid>
           </Grid>

@@ -66,10 +66,10 @@ const Page = () => {
         }}
       >
         <Container maxWidth="xl">
-          <Stack spacing={3} marginTop="20px">
+          <Stack spacing={3} marginTop="20px" marginBottom="60px">
             <Stack direction="row" justifyContent="space-between" spacing={4}>
               <Stack spacing={1}>
-                <Typography variant="h4">Gender</Typography>
+                <Typography variant="h6">Gender</Typography>
                 <Stack alignItems="center" direction="row" spacing={1}>
                   <Button
                     color="inherit"
